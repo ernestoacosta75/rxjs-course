@@ -26,31 +26,27 @@ import {createHttpObservable} from '../common/util';
 export class AboutComponent implements OnInit {
 
     ngOnInit() {
-      /**
-      const interval$ = interval(3000); // Declaring a definition for stream of values (Observable)
-                                        // This Observable emits a sequence of numbers
 
-      interval$.subscribe( val => console.log('stream 1 => ' + val));  // With subscribe() we're creating a
-                                                                      // stream of values
-      interval$.subscribe( val => console.log('stream 2 => ' + val));
-       */
+      // An HTTP stream definition
+      const http$ = Observable.create( (observer: { next: () => void; complete: () => void; error: (arg0: any) => void; }) => {
+        fetch('/api/courses')
+          .then( response => {
+            return response.json();
+          })
+          .then( body => {
+            observer.next(body);
+            observer.complete();
+          })
+          .catch( err => {
+            observer.error(err);
+          });
+      });
 
-      const interval$ = timer(3000, 1000);
-
-      const sub = interval$.subscribe( val => console.log('stream 1 => ' + val));
-
-      // Unsubscribe from interval stream after 5 seconds
-      setTimeout(() => {
-        console.log('Unsubscribing from interval stream...');
-        sub.unsubscribe();
-      }, 10000);
-
-      const click$ = fromEvent(document, 'click'); // Defining an stream of click events
-
-      click$.subscribe(
-        evt => console.log(evt),
-        err => console.log(err),
-        () => console.log('Completed'));
+      http$.subscribe(
+        courses => console.log(courses),
+        noop,
+        () => console.log('Completed')
+      );
     }
 }
 
