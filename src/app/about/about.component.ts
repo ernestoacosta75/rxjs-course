@@ -19,15 +19,28 @@ import {createHttpObservable} from '../common/util';
 
 
 @Component({
-    selector: 'about',
+    selector: 'app-about',
     templateUrl: './about.component.html',
     styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
 
     ngOnInit() {
+      document.addEventListener('click', evt => {
+        console.log(evt);
+      });
 
+      let counter = 0;
 
+      setInterval(() => {
+        console.log(counter);
+
+        counter++;
+      }, 5000);
+
+      setTimeout(() => {
+        console.log("Finished...");
+      }, 3000);
     }
 
 
