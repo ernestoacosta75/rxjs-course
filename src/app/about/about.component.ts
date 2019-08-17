@@ -37,11 +37,20 @@ export class AboutComponent implements OnInit {
 
       const interval$ = timer(3000, 1000);
 
-      interval$.subscribe( val => console.log('stream 1 => ' + val));
+      const sub = interval$.subscribe( val => console.log('stream 1 => ' + val));
+
+      // Unsubscribe from interval stream after 5 seconds
+      setTimeout(() => {
+        console.log('Unsubscribing from interval stream...');
+        sub.unsubscribe();
+      }, 10000);
 
       const click$ = fromEvent(document, 'click'); // Defining an stream of click events
 
-      click$.subscribe( evt => console.log(evt));
+      click$.subscribe(
+        evt => console.log(evt),
+        err => console.log(err),
+        () => console.log('Completed'));
     }
 }
 
