@@ -26,24 +26,23 @@ import {createHttpObservable} from '../common/util';
 export class AboutComponent implements OnInit {
 
     ngOnInit() {
-      document.addEventListener('click', evt => {
-        console.log(evt);
+      /**
+      const interval$ = interval(3000); // Declaring a definition for stream of values (Observable)
+                                        // This Observable emits a sequence of numbers
 
-        setTimeout(() => {
-          console.log('Finished...');
+      interval$.subscribe( val => console.log('stream 1 => ' + val));  // With subscribe() we're creating a
+                                                                      // stream of values
+      interval$.subscribe( val => console.log('stream 2 => ' + val));
+       */
 
-          let counter = 0;
+      const interval$ = timer(3000, 1000);
 
-          setInterval(() => {
-            console.log(counter);
+      interval$.subscribe( val => console.log('stream 1 => ' + val));
 
-            counter++;
-          }, 1000);
-        }, 3000);
-      });
+      const click$ = fromEvent(document, 'click'); // Defining an stream of click events
+
+      click$.subscribe( evt => console.log(evt));
     }
-
-
 }
 
 
