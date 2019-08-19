@@ -19,7 +19,7 @@
     "lib": [
       "es2017",
       "dom",
-      "ES2017.object"
+      "es2017.object"
     ]
   }
 }

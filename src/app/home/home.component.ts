@@ -14,7 +14,7 @@ import {
   AsyncSubject,
   ReplaySubject
 } from 'rxjs';
-import {delayWhen, filter, map, take, timeout} from 'rxjs/operators';
+import {delayWhen, map, filter, take, timeout} from 'rxjs/operators';
 import {createHttpObservable} from '@app/common/util';
 import { Course } from '@app/model/course';
 
@@ -26,8 +26,9 @@ import { Course } from '@app/model/course';
 })
 export class HomeComponent implements OnInit {
 
-    beginnerCourses: Course [];
-    advancedCourses: Course [];
+    // Streams definition data
+    beginnerCourses$: Observable<Course []>;
+    advancedCourses$: Observable<Course []>;
 
     constructor() {
 
@@ -35,23 +36,23 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
       // An HTTP stream definition
-      const http$ = createHttpObservable('/api/courses');
+      const http$: Observable<Course []> = createHttpObservable('/api/courses');
 
-      const courses$ = http$
+      const courses$: Observable<Course []> = http$
           .pipe(
             map(res => Object.values(res['payload']))
           );
 
-      courses$.subscribe(
-        courses => {
-          this.beginnerCourses = courses
-              .filter(course => course.category === 'BEGINNER');
+      this.beginnerCourses$ = courses$
+            .pipe(
+              map(courses => courses
+                .filter(course => course.category === 'BEGINNER'))
+            );
 
-              this.advancedCourses = courses
-              .filter(course => course.category === 'ADVANCED');
-        },
-        noop,
-        () => console.log('Completed')
-      );
+      this.advancedCourses$ = courses$
+          .pipe(
+            map(courses => courses
+              .filter(course => course.category === 'ADVANCED'))
+          );
     }
 }
