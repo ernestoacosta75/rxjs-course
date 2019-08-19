@@ -2,6 +2,10 @@
   "compileOnSave": false,
   "compilerOptions": {
     "module": "esnext",
+    "baseUrl": "src",
+    "paths": {
+      "@app/*": ["app/*"]
+    },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
