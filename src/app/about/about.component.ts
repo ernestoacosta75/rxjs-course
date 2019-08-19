@@ -28,29 +28,20 @@ export class AboutComponent implements OnInit {
     ngOnInit() {
 
       // An HTTP stream definition
-      const http$ = Observable.create( (observer: { next: () => void; complete: () => void; error: (arg0: any) => void; }) => {
-        fetch('/api/courses')
-          .then( response => {
-            return response.json();
-          })
-          .then( body => {
-            observer.next(body);
-            observer.complete();
-          })
-          .catch( err => {
-            observer.error(err);
-          });
-      });
+      const http$ = createHttpObservable('/api/courses');
 
-      http$.subscribe(
+      const courses$ = http$
+          .pipe(
+            map(res => Object.values(res['payload']))
+          );
+
+      courses$.subscribe(
         courses => console.log(courses),
         noop,
         () => console.log('Completed')
       );
     }
 }
-
-
 
 
 

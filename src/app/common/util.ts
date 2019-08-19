@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs';
 
 
-export function createHttpObservable(url:string) {
+export function createHttpObservable(url: string) {
     return Observable.create(observer => {
 
         const controller = new AbortController();
@@ -13,6 +13,7 @@ export function createHttpObservable(url:string) {
                 if (response.ok) {
                     return response.json();
                 }
+                // tslint:disable-next-line: one-line
                 else {
                     observer.error('Request failed with status code: ' + response.status);
                 }
@@ -30,9 +31,7 @@ export function createHttpObservable(url:string) {
 
             });
 
-        return () => controller.abort()
-
-
+        return () => controller.abort();
     });
 }
 
