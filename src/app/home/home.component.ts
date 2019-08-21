@@ -14,7 +14,7 @@ import {
   AsyncSubject,
   ReplaySubject
 } from 'rxjs';
-import {delayWhen, map, filter, take, timeout} from 'rxjs/operators';
+import {delayWhen, map, filter, take, timeout, tap, shareReplay} from 'rxjs/operators';
 import {createHttpObservable} from '@app/common/util';
 import { Course } from '@app/model/course';
 
@@ -27,8 +27,8 @@ import { Course } from '@app/model/course';
 export class HomeComponent implements OnInit {
 
     // Streams definition data
-    beginnerCourses$: Observable<Course []>;
-    advancedCourses$: Observable<Course []>;
+    beginnerCourses$: Observable<Course[]>;
+    advancedCourses$: Observable<Course[]>;
 
     constructor() {
 
@@ -36,11 +36,13 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
       // An HTTP stream definition
-      const http$: Observable<Course []> = createHttpObservable('/api/courses');
+      const http$ = createHttpObservable('/api/courses');
 
       const courses$: Observable<Course []> = http$
           .pipe(
-            map(res => Object.values(res['payload']))
+            tap(() => console.log('HTTP request executed')),
+            map(res => Object.values(res['payload'])),
+            shareReplay()
           );
 
       this.beginnerCourses$ = courses$
