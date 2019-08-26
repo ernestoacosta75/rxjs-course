@@ -13,7 +13,7 @@ import {Store} from '../common/store.service';
     templateUrl: './course-dialog.component.html',
     styleUrls: ['./course-dialog.component.css']
 })
-export class CourseDialogComponent implements AfterViewInit {
+export class CourseDialogComponent implements OnInit, AfterViewInit {
 
     form: FormGroup;
 
@@ -40,24 +40,12 @@ export class CourseDialogComponent implements AfterViewInit {
 
     }
 
+    ngOnInit() {
+      this.form.valueChanges.subscribe(console.log);
+    }
+
     ngAfterViewInit() {
 
     }
-
-    save() {
-        this.store.saveCourse(this.course.id, this.form.value)
-            .subscribe(
-                () => this.close(),
-                err => console.log("Error saving course", err)
-            );
-    }
-
-
-
-
-    close() {
-        this.dialogRef.close();
-    }
-
 
 }
